@@ -1,7 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="../fsharp-libs.targets" />
+
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>0.1</Version>
+  </PropertyGroup>
+
+  <!-- AssemblyInfo properties -->
+  <PropertyGroup>
+    <!--
+      Default AssemblyInfo property values.
+      Taken from <https://docs.microsoft.com/en-us/dotnet/core/tools/csproj#assemblyinfo-properties>.
+
+      <AssemblyVersion>$(Version) without suffix</AssemblyVersion>
+      <FileVersion>$(Version) without suffix</FileVersion>
+      <InformationalVersion>$(Version) or $(Version)-$(SourceRevisionId)</InformationalVersion>
+
+      <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    -->
+    <Description>F# implementation of the state monad</Description>
+  </PropertyGroup>
+
+  <!-- NuGet metadata properties -->
+  <PropertyGroup>
+    <Authors>smindinvern</Authors>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
