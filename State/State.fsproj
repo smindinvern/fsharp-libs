@@ -26,6 +26,7 @@
   <PropertyGroup>
     <Authors>smindinvern</Authors>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    <PackageId>smindinvern.State</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -7,6 +7,13 @@
     <Version>0.1</Version>
   </PropertyGroup>
 
+  <!-- NuGet metadata properties -->
+  <PropertyGroup>
+    <Authors>smindinvern</Authors>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    <PackageId>smindinvern.Utils</PackageId>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="Utils.fs" />
   </ItemGroup>

@@ -11,14 +11,21 @@
   <PropertyGroup>
     <Description>A simple zipper data structure for arrays</Description>
   </PropertyGroup>
-  
+
+  <!-- NuGet metadata properties -->
+  <PropertyGroup>
+    <Authors>smindinvern</Authors>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    <PackageId>smindinvern.Zipper</PackageId>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="Zipper.fs" />
   </ItemGroup>
 
   <!-- Dependencies -->
   <ItemGroup>
-    <ProjectReference Include="../Utils/Utils.fsproj" />
+    <PackageReference Include="smindinvern.Utils" Version="[0.1,1.0)" />
   </ItemGroup>
 
 </Project>
