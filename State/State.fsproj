@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.1</Version>
+    <Version>0.1.1</Version>
   </PropertyGroup>
 
   <!-- AssemblyInfo properties -->
@@ -31,6 +31,10 @@
 
   <ItemGroup>
     <Compile Include="State.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="4.3.4" />
   </ItemGroup>
 
 </Project>
