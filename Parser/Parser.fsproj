@@ -20,6 +20,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Types.fs" />
+    <Compile Include="Monad.fs" />
     <Compile Include="Parser.fs" />
     <Compile Include="Combinators.fs" />
   </ItemGroup>
