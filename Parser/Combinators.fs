@@ -1,7 +1,11 @@
-module Combinators
+namespace smindinvern.Parser
+
+module Combinators =
 
     open Utils
-    open Parser
+    open Types
+    open Monad
+    open Primitives
     
     /// <summary>
     /// Parse something, ignore something else.  Useful for eating non-semantic tokens, e.g. commas.
@@ -52,25 +56,23 @@ module Combinators
         Utils.fold' (<|>) ps
     
     /// <summary>
-    /// Run a parser, mapping errors to Option.None.
-    ///
-    /// This parser always succeeds.
-    /// </summary>
-    /// <param name="c">The parser to try.</param>
-    
-    let inline tryParse (c: Parser<'s, 'u, 'a>) : Parser<'s, 'u, 'a option> =
-        let failure = inject Option.None
-        (Option.Some <@> c) <|> failure
-    
-    /// <summary>
     /// Attempt to run a parser.  If it fails, produce a given "default" value,
     /// rather than an error.
     /// </summary>
     /// <param name="c">The parser to run.</param>
     /// <param name="def">The value to produce in case of error.</param>
-    let inline optional (c: Parser<'s, 'u, 'a>) (def: 'a) =
+    let inline optional (c: Parser<'s, 'u, 'a>) (def: 'a) : Parser<'s, 'u, 'a> =
         c <|> (inject def)
     
+    /// <summary>
+    /// Run a parser, mapping errors to Option.None.
+    ///
+    /// This parser always succeeds.
+    /// </summary>
+    /// <param name="c">The parser to try.</param>
+    let inline tryParse (c: Parser<'s, 'u, 'a>) : Parser<'s, 'u, 'a option> =
+        optional (Option.Some <@> c) Option.None
+
     let rec private parseUntilTailRecursive (p: Parser<'s, 'u, bool>) (c: Parser<'s, 'u, 'a>) (tail: 'a list) : Parser<'s, 'u, 'a list> =
         parse {
             let! b = p
@@ -116,7 +118,7 @@ module Combinators
         sequence <| List.replicate n c
     
     let isEOF<'s, 'u> : Parser<'s, 'u, bool> =
-        (konst false <@> peek) <|> (inject true)
+        (konst false <@> peek1) <|> (inject true)
     
     let inline (<||>) p1 p2 =
         parse {
@@ -138,7 +140,7 @@ module Combinators
             (+) <@> s1 <*> s2
         let inline (~%) (s: string) =
             parse {
-                let! x = pop
+                let! x = pop1
                 if x = s then
                     return s
                 else
@@ -146,14 +148,14 @@ module Combinators
             }
 
     module LineInfo =
-        open Parser.LineInfo
+        open Primitives.LineInfo
         
         module StringParser =
             let inline (<+>) (s1: StringParser<'u, 'a>) (s2: StringParser<'u, 'a>) =
                 (+) <@> s1 <*> s2
             let inline (~%) (s: string) =
                 parse {
-                    let! x = pop
+                    let! x = pop1
                     if x = s then
                         return s
                     else
