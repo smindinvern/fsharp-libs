@@ -13,3 +13,6 @@ module Utils
 
     let inline maybe (def: 'b) (f: 'a -> 'b) (a: 'a option) : 'b =
         Option.fold (fun _ -> f) def a
+
+    let rec intersperse (a: 'a) (xs: 'a list) : 'a list =
+        List.foldBack (fun x xs' -> x::a::xs') xs []
