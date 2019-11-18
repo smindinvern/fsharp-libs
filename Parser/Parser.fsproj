@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="../fsharp-libs.targets" />
   
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.2.1</Version>
+    <Version>0.3.0</Version>
   </PropertyGroup>
 
   <!-- AssemblyInfo properties -->
@@ -14,7 +14,7 @@
 
   <!-- NuGet metadata properties -->
   <PropertyGroup>
-    <Authors>smindinvern</Authors>
+    <Authors>Nickolas Lloyd</Authors>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
     <PackageId>smindinvern.Parser</PackageId>
   </PropertyGroup>
@@ -28,9 +28,9 @@
 
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="4.3.4" />
-    <PackageReference Include="smindinvern.State" Version="[0.1.1,1.0)" />
-    <PackageReference Include="smindinvern.Utils" Version="[0.1.1,1.0)" />
-    <PackageReference Include="smindinvern.Zipper" Version="[0.1.1,1.0)" />
+    <PackageReference Include="smindinvern.Alternative" Version="[0.2.2,1.0)" />
+    <PackageReference Include="smindinvern.Utils" Version="[1.0.0,2.0)" />
+    <PackageReference Include="smindinvern.Zipper" Version="[0.1.2,1.0)" />
   </ItemGroup>
 
 </Project>

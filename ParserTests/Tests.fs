@@ -3,7 +3,11 @@ module Tests
 open System
 open Xunit
 
-open Parser
+open smindinvern.Alternative
+open smindinvern.Parser.Types
+open smindinvern.Parser.Monad
+open smindinvern.Parser.Primitives
+open smindinvern.Parser.Combinators
 
 module SimpleTests =
 
@@ -13,7 +17,7 @@ module SimpleTests =
     let someStringTest () =
         let p =
             parse {
-                let! (s: string) = pop
+                let! (s: string) = pop1
                 return s.ToLower()
             }
         let ts = new TokenStream<string>(ref someStrings, 0)
@@ -22,14 +26,14 @@ module SimpleTests =
             let zipped = Array.zip someLowerCase (Array.ofList s)
             Assert.True(Array.forall (fun (x,y) -> x=y) zipped)
         | Result.Error e ->
-            Assert.True(false, e)
+            Assert.True(false, sprintf "%A" e)
     
     type CharParser<'a> = Parser<char, unit, 'a>
     type CharStream = TokenStream<char>
 
     let chr (c: char) =
         parse {
-            let! x = pop
+            let! x = pop1
             if x = c then
                 return c
             else

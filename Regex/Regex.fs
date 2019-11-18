@@ -1,12 +1,16 @@
 module Regex
 
-open Parser
+open smindinvern.Alternative
+open smindinvern.Parser.Types
+open smindinvern.Parser.Monad
+open smindinvern.Parser.Primitives
+open smindinvern.Parser.Combinators
 
 #nowarn "40"
 
 let private chr (c: char) =
     parse {
-        let! x = pop
+        let! x = pop1
         if x = c then
             return c
         else
@@ -37,7 +41,7 @@ module Matching =
         }
     let matchAnyChar =
         parse {
-            let! c = pop
+            let! c = pop1
             do! pushChar c
         }
     let matchSequence ps : Regex = ignore <@> sequence ps
@@ -90,14 +94,14 @@ module Parsing =
     and repitition : RegexParser<Regex> =
         parse {
             let! expr = subexpr <|> dot <|> regexChr
-            match! pop with
+            match! pop1 with
             | '*' -> return ignore <@> some expr
             | '+' -> return ignore <@> many expr
             | c -> return! error <| "Expected '*' or '+' but got '" + (string c) + "'."
         }
     and regexChr : RegexParser<Regex> =
         parse {
-            let! c = pop
+            let! c = pop1
             if not(List.contains c [ '('; ')'; '*'; '+'; '.'; '|' ]) then
                 return matchChar c
             else
@@ -114,7 +118,7 @@ let compileRegex (regex: string) : Matching.Regex =
     let (s, result) = runParser Parsing.S (new TokenStream<char>(ref arr, 0)) ()
     match result with
     | Ok compiled -> compiled
-    | Error e -> failwith e
+    | Error e -> failwithf "%A" e
 
 let matchRegex (compiled: Matching.Regex) (s: string) : string option =
     let arr = s.ToCharArray()

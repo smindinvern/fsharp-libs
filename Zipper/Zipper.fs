@@ -1,4 +1,6 @@
-module Zipper
+namespace smindinvern
+
+module Zipper =
 
     open System
 

@@ -1,4 +1,6 @@
-module State
+namespace smindinvern
+
+module State =
 
     /// <summary>
     /// A monad encapsulating a computation and an accompanying state.  The state

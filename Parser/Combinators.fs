@@ -2,7 +2,9 @@ namespace smindinvern.Parser
 
 module Combinators =
 
-    open Utils
+    open smindinvern.Utils
+    open smindinvern.Alternative
+    open smindinvern.Alternative.Monad
     open Types
     open Monad
     open Primitives
@@ -20,40 +22,16 @@ module Combinators =
             let! _ = skip
             return keep'
         }
-    
-    /// <summary>
-    /// Models short-circuit logical-OR on Parsers.
-    ///
-    /// (f <|> g) produces a value IFF one of the two parsers succeeds.
-    /// If both parsers fail, their errors are concatenated around the
-    /// string " <|> " to indicate that alternatives were attempted.
-    /// </summary>
-    /// <param name="f">The first parser to try.</param>
-    /// <param name="g">The second parser to try.</param>
-    let (<|>) (f: Parser<'s, 'u, 'a>) (g: Parser<'s, 'u, 'a>) : Parser<'s, 'u, 'a> =
-        // Implement choice with possibility of failure
-        State.state {
-            let! s = State.get
-            match! f with
-            | Result.Error msg1 ->
-                let! (_, _, abort) = State.get
-                if abort then
-                    return Result.Error msg1
-                else
-                    // Back-track to previous state.
-                    let! _ = State.put s
-                    match! g with
-                    | Result.Error msg2 -> return Result.Error (msg1 + " <|> " + msg2)
-                    | x -> return x
-            | x -> return x
-        }
-    
+        
     /// <summary>
     /// Try each parser in a list until one succeeds.  Produce an error otherwise.
     /// </summary>
     /// <param name="ps">A list of parsers to try.</param>
     let inline oneOf (ps: Parser<'s, 'u, 'a> list) : Parser<'s, 'u, 'a> =
-        Utils.fold' (<|>) ps
+        List.fold' (<|>) ps
+    
+    let inline oneOfLazy (ps: Parser<'s, 'u,' a> seq) : Parser<'s, 'u, 'a> =
+        Seq.fold' (<|>) ps 
     
     /// <summary>
     /// Attempt to run a parser.  If it fails, produce a given "default" value,
@@ -112,13 +90,13 @@ module Combinators =
         parseUntilFailTailRecursive c []
     
     let inline many (c: Parser<'s, 'u, 'a>) : Parser<'s, 'u, 'a list> =
-        Utils.cons <@> c <*> some c
+        List.cons <@> c <*> some c
     
     let inline repeat (c: Parser<'s, 'u, 'a>) (n: int) : Parser<'s, 'u, 'a list> =
         sequence <| List.replicate n c
 
     let rec atMost (c: Parser<'s, 'u, 'a>) (n:int) : Parser<'s, 'u, 'a list> =
-        optional (Utils.cons <@> c <*> (atMost c (n - 1))) []
+        optional (List.cons <@> c <*> (atMost c (n - 1))) []
         
     let range (c: Parser<'s, 'u, 'a>) (atLeastN: int) (atMostN: int) : Parser<'s, 'u, 'a list> =
         parse {
